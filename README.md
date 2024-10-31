@@ -17,7 +17,7 @@ Esta plantilla demuestra cómo desarrollar e implementar un servicio API de Node
 
 La plantilla configura una única función, `api`, que maneja todas las solicitudes entrantes mediante el evento `httpApi`. Para obtener más información sobre las opciones de configuración del evento `httpApi`, consulte la documentación del evento [httpApi event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). Como el evento está configurado para aceptar todas las solicitudes entrantes, el framework Express.js se encarga de enrutar y manejar internamente las solicitudes. Esta implementación usa el paquete `serverless-http` para transformar las cargas de solicitud de eventos entrantes en cargas compatibles con Express.js. Para más información sobre `serverless-http`, consulte el [serverless-http README](https://github.com/dougmoscrop/serverless-http).
 
-Además, también se encarga del aprovisionamiento de una base de datos DynamoDB que se utiliza para almacenar datos sobre los usuarios. La aplicación Express.js expone dos puntos finales,, `POST /users/register` y `POST /user/login`, que crean un usuario y puedes ingresar con las credenciales creadas.
+Además, también se encarga del aprovisionamiento de una base de datos DynamoDB que se utiliza para almacenar datos sobre los usuarios. La aplicación Express.js expone dos puntos finales, `POST /users/register` y `POST /user/login` `GET /user/profile`, que crean un usuario y puedes ingresar con las credenciales creadas.
 
 Además, se consume la siguiente api  `https://swapi.py4e.com/documentation`.Tenemos las siguientes rutas,, `GET /planets/swapi` y `POST /planets/swapi/:id`, que obtienen los planetas en español.
 ### Arquitectura
@@ -88,7 +88,9 @@ Lo que debería resultar en la siguiente respuesta:
 }
 ```
 Luego puede ingresar con su el token para hacer las peticiones en las siguientes rutas como :
-
+```
+curl https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/users/profile 
+```
 ```
 curl https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/planets/swapi 
 ```
