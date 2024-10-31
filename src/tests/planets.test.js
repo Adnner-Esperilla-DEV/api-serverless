@@ -3,7 +3,6 @@ const { getPlanets, getPlanetsById } = require("../services/swapiService");
 const { planetMapping } = require("../utils/planetMapping");
 
 jest.mock("axios");
-// jest.mock('../src/helpers/transform');
 const SWAPI_URL = "https://swapi.py4e.com/api/planets";
 describe("getPlanets", () => {
   it("Debería obtener y transformar los datos de los planetas con éxito", async () => {
@@ -39,29 +38,6 @@ describe("getPlanets", () => {
       },
     };
     axios.get.mockResolvedValue(mockResponse);
-    // // Mock axios.get to return the mock response
-    // axios.get.mockResolvedValue(mockResponse);
-
-    // Mock transformData function to return a transformed item
-    // transformData((item) => ({
-    //   transformedName: item.name,
-    // }));
-    // const transformData = jest.fn((item) => ({
-    //   nombre: item.name,
-    //   periodo_rotacion: item.rotation_period,
-    //   periodo_orbital: item.orbital_period,
-    //   diametro: item.diameter,
-    //   clima: item.climate,
-    //   gravedad: item.gravity,
-    //   terreno: item.terrain,
-    //   agua_superficial: item.surface_water,
-    //   poblacion: item.population,
-    //   residentes: item.residents,
-    //   peliculas: item.films,
-    //   creado: item.created,
-    //   editado: item.edited,
-    //   url: item.url,
-    // }));
     const result = await getPlanets();
 
     expect(axios.get).toHaveBeenCalledWith(SWAPI_URL);

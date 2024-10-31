@@ -1,5 +1,4 @@
-const { validateEmail,docClient } = require('../middlewares/validateEmail'); // Ajusta la ruta según tu estructura
-// const { docClient } = require('@aws-sdk/lib-dynamodb');
+const { validateEmail,docClient } = require('../middlewares/validateEmail'); 
 
 jest.mock('@aws-sdk/lib-dynamodb', () => {
     const originalModule = jest.requireActual('@aws-sdk/lib-dynamodb');
@@ -7,7 +6,7 @@ jest.mock('@aws-sdk/lib-dynamodb', () => {
       ...originalModule,
       DynamoDBDocumentClient: {
         from: jest.fn().mockReturnValue({
-          send: jest.fn(), // Mockea el método send
+          send: jest.fn(), 
         }),
       },
       ScanCommand: jest.fn(),
@@ -29,10 +28,9 @@ describe('validateEmail Middleware', () => {
   it('should call next() if email is not registered', async () => {
     req.body.email = 'test@example.com';
     
-    // Simula la respuesta de send
     const sendMock = docClient.send.mockResolvedValueOnce({
       Items: [
-        { email: 'another@example.com' }, // Email diferente
+        { email: 'another@example.com' }, 
       ],
     });
 
@@ -44,10 +42,9 @@ describe('validateEmail Middleware', () => {
   it('should return 400 if email is already registered', async () => {
     req.body.email = 'test@example.com';
 
-    // Simula la respuesta de send
     const sendMock = docClient.send.mockResolvedValueOnce({
       Items: [
-        { email: 'test@example.com' }, // Email igual
+        { email: 'test@example.com' }, 
       ],
     });
 
@@ -61,7 +58,6 @@ describe('validateEmail Middleware', () => {
   it('should return 500 if there is an error in the database call', async () => {
     req.body.email = 'test@example.com';
 
-    // Simula un error
     const sendMock = docClient.send.mockRejectedValueOnce(new Error('Database error'));
 
     await validateEmail(req, res, next);
