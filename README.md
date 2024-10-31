@@ -20,10 +20,11 @@ La plantilla configura una única función, `api`, que maneja todas las solicitu
 Además, también se encarga del aprovisionamiento de una base de datos DynamoDB que se utiliza para almacenar datos sobre los usuarios. La aplicación Express.js expone dos puntos finales,, `POST /users/register` y `POST /user/login`, que crean un usuario y puedes ingresar con las credenciales creadas.
 
 Además, se consume la siguiente api  `https://swapi.py4e.com/documentation`.Tenemos las siguientes rutas,, `GET /planets/swapi` y `POST /planets/swapi/:id`, que obtienen los planetas en español.
-## Arquitectura
+### Arquitectura
 <p align="center">
   <img src="assets/architecture.png" alt="Arquitectura del Proyecto">
 </p>
+
 ## Uso
 
 ### Despliegue
