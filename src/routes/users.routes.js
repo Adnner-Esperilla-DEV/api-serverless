@@ -67,7 +67,7 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /profile:
+ * /users/profile:
  *   get:
  *     summary: Obtiene el perfil del usuario autenticado
  *     description: Retorna el nombre y correo del usuario autenticado usando el userId contenido en el token.
