@@ -17,11 +17,14 @@ Esta plantilla demuestra cómo desarrollar e implementar un servicio API de Node
 
 La plantilla configura una única función, `api`, que maneja todas las solicitudes entrantes mediante el evento `httpApi`. Para obtener más información sobre las opciones de configuración del evento `httpApi`, consulte la documentación del evento [httpApi event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). Como el evento está configurado para aceptar todas las solicitudes entrantes, el framework Express.js se encarga de enrutar y manejar internamente las solicitudes. Esta implementación usa el paquete `serverless-http` para transformar las cargas de solicitud de eventos entrantes en cargas compatibles con Express.js. Para más información sobre `serverless-http`, consulte el [serverless-http README](https://github.com/dougmoscrop/serverless-http).
 
-Additionally, it also handles provisioning of a DynamoDB database that is used for storing data about users. The Express.js application exposes two endpoints, `POST /users` and `GET /user/:userId`, which create and retrieve a user record.
+Además, también se encarga del aprovisionamiento de una base de datos DynamoDB que se utiliza para almacenar datos sobre los usuarios. La aplicación Express.js expone dos puntos finales,, `POST /users/register` y `POST /user/login`, que crean un usuario y puedes ingresar con las credenciales creadas.
 
-## Usage
+Además, se consume la siguiente api  `https://swapi.py4e.com/documentation`.Tenemos las siguientes rutas,, `GET /planets/swapi` y `POST /planets/swapi/:id`, que obtienen los planetas en español.
+## Arquitectura
+![alt text](image.png)
+## Uso
 
-### Deployment
+### Despliegue
 
 Instale las dependencias con:
 
@@ -43,6 +46,7 @@ Deploying "aws-node-express-dynamodb-api" to stage "dev" (us-east-1)
 ✔ Service deployed to stack aws-node-express-dynamodb-api-dev (109s)
 
 endpoint: ANY - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com
+example: ANY - https://sluyylvtvh.execute-api.us-east-1.amazonaws.com
 functions:
   api: aws-node-express-dynamodb-api-dev-api (3.8 MB)
 ```
@@ -53,7 +57,7 @@ _Nota_: En la configuración actual, su API es pública y puede ser invocada por
 Después de un despliegue exitoso, puede crear un nuevo usuario llamando al endpoint correspondiente:
 
 ```
-curl --request POST 'https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/users/register' --header 'Content-Type: application/json' --data-raw '{"email": "tuemail@example.com","name": "TuNombre","password":"tuPassword" }'
+curl --request POST 'https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/users/register' --header 'Content-Type: application/json' --data-raw '{"email": "user@example.com","name": "TuNombre","password":"tuPassword" }'
 ```
 
 Lo que debería resultar en la siguiente respuesta:
@@ -61,7 +65,7 @@ Lo que debería resultar en la siguiente respuesta:
 ```json
 {
   "success": true,
-  "message": "Se creo usuario: tuemail@example.com con exito"
+  "message": "Se creo usuario: user@example.com con exito"
 }
 ```
 
@@ -80,7 +84,7 @@ Lo que debería resultar en la siguiente respuesta:
   "message": "Bienvenido: Tu Nombre Apellido "
 }
 ```
-Luego puede ingresar con su el tokern para hacer las peticioens en las siguientes rutas como :
+Luego puede ingresar con su el token para hacer las peticiones en las siguientes rutas como :
 
 ```
 curl https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/planets/swapi 
