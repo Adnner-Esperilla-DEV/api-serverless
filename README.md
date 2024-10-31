@@ -21,7 +21,9 @@ Además, también se encarga del aprovisionamiento de una base de datos DynamoDB
 
 Además, se consume la siguiente api  `https://swapi.py4e.com/documentation`.Tenemos las siguientes rutas,, `GET /planets/swapi` y `POST /planets/swapi/:id`, que obtienen los planetas en español.
 ## Arquitectura
-![alt text](image.png)
+<p align="center">
+  <img src="assets/architecture.png" alt="Arquitectura del Proyecto">
+</p>
 ## Uso
 
 ### Despliegue
