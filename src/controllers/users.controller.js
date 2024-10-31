@@ -3,6 +3,7 @@ const {
   DynamoDBDocumentClient,
   ScanCommand,
   PutCommand,
+  GetCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const { userSchema, loginSchema } = require("../models/user");
 const { v4: uuidv4 } = require("uuid");
@@ -34,7 +35,7 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Could not create user" });
+    res.status(500).json({ error: "No se pudo crear el usuario" });
   }
 };
 const loginUser = async (req, res) => {
@@ -70,7 +71,32 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const getProfile = async (req, res) => {
+  const { userId } = req;
+console.log('entro al perfil')
+  try {
+    const params = {
+      TableName: USERS_TABLE,
+      Key: { userId },
+    };
+
+    const result = await docClient.send(new GetCommand(params));
+    const user = result.Item;
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const { name,email } = user;
+
+    res.status(200).json({name,email});
+  } catch (error) {
+    console.error('Error al obtener el perfil:', error);
+    res.status(500).json({ error: 'Error al obtener el perfil del usuario' });
+  }
+};
 module.exports = {
   registerUser,
   loginUser,
+  getProfile,
 };

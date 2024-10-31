@@ -30,7 +30,7 @@ const authenticateToken = async (req, res, next) => {
         msg: "Token no válido - usuario no existe DB",
       });
     }
-    // req.user = user;
+    req.userId = userId;
     next();
   } catch (error) {
     console.log(error);

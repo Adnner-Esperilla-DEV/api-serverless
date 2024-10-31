@@ -1,7 +1,7 @@
 const express = require("express");
-const { registerUser,loginUser } = require("../controllers/users.controller");
+const { registerUser,loginUser,getProfile } = require("../controllers/users.controller");
 const {validatorRegister,validatorLogin } = require("../validators/users");
-const {validateEmail} = require('../middlewares');
+const {validateEmail,authenticateToken} = require('../middlewares');
 const router = express.Router();
 /**
  * @swagger
@@ -65,9 +65,37 @@ const router = express.Router();
  *       401:
  *         description: Credenciales inválidas.
  */
-
+/**
+ * @swagger
+ * /profile:
+ *   get:
+ *     summary: Obtiene el perfil del usuario autenticado
+ *     description: Retorna el nombre y correo del usuario autenticado usando el userId contenido en el token.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Perfil del usuario obtenido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: "adnner"
+ *                 email:
+ *                   type: string
+ *                   example: "user@example.com"
+ *       401:
+ *         description: No autorizado. Token inválido o faltante.
+ *       500:
+ *         description: Error interno del servidor.
+ */
 router.post("/login", validatorLogin, loginUser);
 
 router.post("/register", validatorRegister,validateEmail, registerUser);
-
+router.get('/profile', authenticateToken, getProfile);
 module.exports = router;
