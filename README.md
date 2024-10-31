@@ -11,11 +11,11 @@ authorName: 'Serverless, Inc.'
 authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
 -->
 
-# Serverless Framework Node Express API on AWS
+# API Express Node con Serverless Framework en AWS
 
-This template demonstrates how to develop and deploy a simple Node Express API service, backed by DynamoDB table, running on AWS Lambda using the Serverless Framework.
+Esta plantilla demuestra cómo desarrollar e implementar un servicio API de Node Express simple, respaldado por una tabla DynamoDB, que se ejecuta en AWS Lambda mediante Serverless Framework.
 
-This template configures a single function, `api`, which is responsible for handling all incoming requests using the `httpApi` event. To learn more about `httpApi` event configuration options, please refer to [httpApi event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). As the event is configured in a way to accept all incoming requests, the Express.js framework is responsible for routing and handling requests internally. This implementation uses the `serverless-http` package to transform the incoming event request payloads to payloads compatible with Express.js. To learn more about `serverless-http`, please refer to the [serverless-http README](https://github.com/dougmoscrop/serverless-http).
+La plantilla configura una única función, `api`, que maneja todas las solicitudes entrantes mediante el evento `httpApi`. Para obtener más información sobre las opciones de configuración del evento `httpApi`, consulte la documentación del evento [httpApi event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). Como el evento está configurado para aceptar todas las solicitudes entrantes, el framework Express.js se encarga de enrutar y manejar internamente las solicitudes. Esta implementación usa el paquete `serverless-http` para transformar las cargas de solicitud de eventos entrantes en cargas compatibles con Express.js. Para más información sobre `serverless-http`, consulte el [serverless-http README](https://github.com/dougmoscrop/serverless-http).
 
 Additionally, it also handles provisioning of a DynamoDB database that is used for storing data about users. The Express.js application exposes two endpoints, `POST /users` and `GET /user/:userId`, which create and retrieve a user record.
 
@@ -23,19 +23,19 @@ Additionally, it also handles provisioning of a DynamoDB database that is used f
 
 ### Deployment
 
-Install dependencies with:
+Instale las dependencias con:
 
 ```
 npm install
 ```
 
-and then deploy with:
+y luego despliegue con:
 
 ```
 serverless deploy
 ```
 
-After running deploy, you should see output similar to:
+Después de ejecutar el despliegue, debería ver una salida similar a:
 
 ```
 Deploying "aws-node-express-dynamodb-api" to stage "dev" (us-east-1)
@@ -47,44 +47,56 @@ functions:
   api: aws-node-express-dynamodb-api-dev-api (3.8 MB)
 ```
 
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [`httpApi` event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). Additionally, in current configuration, the DynamoDB table will be removed when running `serverless remove`. To retain the DynamoDB table even after removal of the stack, add `DeletionPolicy: Retain` to its resource definition.
-
+_Nota_: En la configuración actual, su API es pública y puede ser invocada por cualquiera. Para despliegues en producción, podría considerar configurar un autorizador. Para obtener detalles sobre cómo hacerlo, consulte la documentación del evento [`httpApi` event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). Además, en la configuración actual, la tabla DynamoDB se eliminará al ejecutar `serverless remove`. Para conservar la tabla DynamoDB incluso después de eliminar la pila, agregue `DeletionPolicy: Retain` en la definición del recurso.
 ### Invocation
 
-After successful deployment, you can create a new user by calling the corresponding endpoint:
+Después de un despliegue exitoso, puede crear un nuevo usuario llamando al endpoint correspondiente:
 
 ```
-curl --request POST 'https://xxxxxx.execute-api.us-east-1.amazonaws.com/users' --header 'Content-Type: application/json' --data-raw '{"name": "John", "userId": "someUserId"}'
+curl --request POST 'https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/users/register' --header 'Content-Type: application/json' --data-raw '{"email": "tuemail@example.com","name": "TuNombre","password":"tuPassword" }'
 ```
 
-Which should result in the following response:
+Lo que debería resultar en la siguiente respuesta:
 
 ```json
-{ "userId": "someUserId", "name": "John" }
+{
+  "success": true,
+  "message": "Se creo usuario: tuemail@example.com con exito"
+}
 ```
 
-You can later retrieve the user by `userId` by calling the following endpoint:
+Luego puede ingresar con su usuario en el siguiente endpoint:
 
 ```
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/users/someUserId
+curl https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/users/login --header 'Content-Type: application/json' --data-raw '{"email": "tuemail@example.com","password":"tuPassword" }'
 ```
 
-Which should result in the following response:
+Lo que debería resultar en la siguiente respuesta:
 
 ```json
-{ "userId": "someUserId", "name": "John" }
+{
+  "success": true,
+  "token": "token",
+  "message": "Bienvenido: Tu Nombre Apellido "
+}
 ```
+Luego puede ingresar con su el tokern para hacer las peticioens en las siguientes rutas como :
 
-### Local development
+```
+curl https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/planets/swapi 
+```
+```
+curl https://sluyylvtvh.execute-api.us-east-1.amazonaws.com/planets/swapi/1
+```
+### Desarrollo Local
 
-The easiest way to develop and test your function is to use the `dev` command:
-
+La forma más fácil de desarrollar y probar su función es usar el comando `dev`:
 ```
 serverless dev
 ```
+Esto iniciará un emulador local de AWS Lambda y canalizará sus solicitudes hacia y desde AWS Lambda, permitiéndole interactuar con su función como si estuviera ejecutándose en la nube.
 
-This will start a local emulator of AWS Lambda and tunnel your requests to and from AWS Lambda, allowing you to interact with your function as if it were running in the cloud.
+Ahora puede invocar la función como antes, pero esta vez se ejecutará localmente. Puede desarrollar su función localmente, invocarla y ver los resultados de inmediato sin necesidad de volver a desplegarla.
 
-Now you can invoke the function as before, but this time the function will be executed locally. Now you can develop your function locally, invoke it, and see the results immediately without having to re-deploy.
+Cuando termine de desarrollar, no olvide ejecutar `serverless deploy` para desplegar la función en la nube.
 
-When you are done developing, don't forget to run `serverless deploy` to deploy the function to the cloud.

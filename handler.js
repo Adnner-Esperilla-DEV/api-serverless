@@ -5,29 +5,22 @@ const {
 } = require("@aws-sdk/client-dynamodb");
 const {
   DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const express = require("express");
 const serverless = require("serverless-http");
 const planetRoutes = require("./src/routes/planets.routes");
 const userRoutes = require("./src/routes/users.routes");
-// const { swaggerSpec } = require('./src/config/swagger');
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsdoc = require("swagger-jsdoc");
 const cors = require("cors");
 
 const app = express();
-const YAML = require("yamljs");
-const USERS_TABLE = process.env.USERS_TABLE;
 const client = new DynamoDBClient();
 
 const docClient = DynamoDBDocumentClient.from(client);
 
 app.use(cors());
 app.use(express.json());
-
-// const swaggerDocument = YAML.load("./swagger.yaml");
 app.get("/test", async (req, res) => {
   try {
     const data = await docClient.send(new ListTablesCommand({}));
