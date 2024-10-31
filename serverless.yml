@@ -1,0 +1,72 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: sleyder
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: api-serverless
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: api-serverless
+
+stages:
+  default:
+    params:
+      tableName: "users-table-${sls:stage}"
+      tablePlanet: "planets-table-${sls:stage}"
+plugins:
+  - serverless-offline
+  # - serverless-dotenv-plugin
+useDotenv: true
+provider:
+  name: aws
+  runtime: nodejs20.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [UsersTable, Arn]
+  environment:
+    USERS_TABLE: ${param:tableName}
+    PLANETS_TABLE: ${param:tablePlanet}
+    SECRET_KEY: miClaveSecreta123!@
+    # USERS_TABLE: ${env:USERS_TABLE}
+functions:
+  api:  
+    handler: handler.handler
+    timeout: 300
+    events:
+      - httpApi: "*"
+      
+
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:tableName}
+    PlanetsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${param:tablePlanet}
+        AttributeDefinitions:
+          - AttributeName: "id"  
+            AttributeType: "S"    
+        KeySchema:
+          - AttributeName: "id"
+            KeyType: "HASH"     
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

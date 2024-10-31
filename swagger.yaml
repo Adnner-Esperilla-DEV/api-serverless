@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Documentación de API
+  description: Documentación de la API MotoMoto v1.0
+  version: 1.0.0
+tags:
+  - name: auth
+    description: Endpoints relacionados con la autenticación
+  - name: users
+    description: Endpoints relacionados con los usuarios
+  - name: products
+    description: Endpoints relacionados con los productos
+  - name: recargas
+    description: Endpoints relacionados con las recargas del cliente
+  - name: ventas
+    description: Endpoints relacionados con las ventas del sistema
+servers:
+  - url: http://35.170.243.29:3000
+paths:
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        lastName:
+          type: string
+        photoProfile:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [vendedor, cliente]
+        saldo:
+          type: number
+        status:
+          type: string
+          enum: [activo, inactivo]
+        codigoReferido:
+          type: string
+    Subscription:
+      type: object
+      properties:
+        user:
+          type: string
+          description: ID del usuario suscrito
+        startSubscription:
+          type: string
+          format: date-time
+          description: Fecha de inicio de la suscripción
+        endSubscription:
+          type: string
+          format: date-time
+          description: Fecha de finalización de la suscripción
+      required:
+        - user
+        - startSubscription
+        - endSubscription
